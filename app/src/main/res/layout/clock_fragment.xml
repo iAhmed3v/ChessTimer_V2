@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/first_player_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:rotation="180"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+            android:id="@+id/first_player_button"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:backgroundTint="@color/purple_dark"
+            android:layout_margin="5dp"/>
+
+        <TextView
+            android:id="@+id/first_player_text_counter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:elevation="100dp"
+            android:textColor="@color/white"
+            android:textSize="100sp"
+            tools:text="01:00" />
+    </FrameLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/pause_button"
+        android:layout_width="wrap_content"
+        android:layout_height="80dp"
+        android:layout_marginStart="100dp"
+        android:background="@drawable/ic_pause"
+        app:backgroundTint="@color/purple_dark"
+        app:layout_constraintBottom_toTopOf="@+id/second_player_container"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/first_player_container" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/restart_button"
+        android:layout_width="wrap_content"
+        android:layout_height="80dp"
+        android:layout_marginEnd="100dp"
+        android:background="@drawable/ic_restart"
+        app:backgroundTint="@color/purple_dark"
+        app:layout_constraintBottom_toTopOf="@+id/second_player_container"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/first_player_container" />
+
+    <FrameLayout
+
+        android:id="@+id/second_player_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <Button
+            android:id="@+id/second_player_button"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:backgroundTint="@color/purple_dark"/>
+
+        <TextView
+            android:id="@+id/playerTwoTextCounter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:textColor="@color/white"
+            android:elevation="100dp"
+            android:textSize="100sp"
+            tools:text="01:00"/>
+
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
