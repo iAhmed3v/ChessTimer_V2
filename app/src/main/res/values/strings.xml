@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">ChessTimer_V2</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_theme">Dark Theme</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
@@ -9,4 +9,10 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="one_min_text">1 min</string>
+    <string name="five_min_text">5 min</string>
+    <string name="ten_min_text">10 min</string>
+    <string name="fifteen_min_text">15 min</string>
+    <string name="twenty_min_text">20 min</string>
+    <string name="thirty_min_text">30 min</string>
 </resources>
