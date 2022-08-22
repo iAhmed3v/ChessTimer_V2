@@ -72,7 +72,7 @@
             android:backgroundTint="@color/purple_dark"/>
 
         <TextView
-            android:id="@+id/playerTwoTextCounter"
+            android:id="@+id/second_player_text_counter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|center_vertical"
