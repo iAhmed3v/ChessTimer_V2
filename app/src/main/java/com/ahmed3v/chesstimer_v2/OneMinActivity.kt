@@ -1,197 +1,238 @@
 package com.ahmed3v.chesstimer_v2
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.ahmed3v.chesstimer_v2.databinding.ActivityOneMinBinding
+import kotlinx.coroutines.NonCancellable.cancel
 
 class OneMinActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityOneMinBinding
-
-    private var firstTimer: CountDownTimer? = null
-    private var secondTimer:CountDownTimer? = null
     private var firstCounter: Int = 60
     private var secondCounter: Int = 60
 
-    private var builder: AlertDialog.Builder? = null
-    private var dialog: AlertDialog? = null
-    private var inflater: LayoutInflater? = null
-    
-    private val firstPlayerButtonSound: MediaPlayer? = null
-    private val secondPlayerButtonSound: MediaPlayer? = null
-    private val clockFinished: MediaPlayer? = null
-    
+    private lateinit var firstTimer: CountDownTimer
+    private lateinit var secondTimer:CountDownTimer
+
+    private lateinit var firstPlayerButton: Button
+    private lateinit var secondPlayerButton: Button
+
+    private lateinit var firstPlayerTextCounter: TextView
+    private lateinit var secondPlayerTextCounter: TextView
+
+    private lateinit var restartButton: Button
+    private lateinit var pauseButton: Button
+
+
+    private lateinit var firstPlayerButtonSound: MediaPlayer
+    private lateinit var secondPlayerButtonSound: MediaPlayer
+    private lateinit var clockFinished: MediaPlayer
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.clock_activity)
 
-        //set up binding
-        binding = ActivityOneMinBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        firstPlayerButton = findViewById(R.id.first_player_button)
+        secondPlayerButton = findViewById(R.id.second_player_button)
+        pauseButton = findViewById(R.id.pause_button)
+        restartButton = findViewById(R.id.restart_button)
 
-        binding.restartButton.setEnabled(false)
-        binding.pauseButton.setEnabled(false)
+        firstPlayerTextCounter = findViewById(R.id.first_player_text_counter)
+        secondPlayerTextCounter = findViewById(R.id.second_player_text_counter)
+
+        firstPlayerButtonSound = MediaPlayer.create(applicationContext, R.raw.chess_clock_switch1)
+        secondPlayerButtonSound = MediaPlayer.create(applicationContext, R.raw.chess_clock_switch2)
+        clockFinished = MediaPlayer.create(applicationContext, R.raw.chess_clock_time_ended)
+
+        restartButton.isEnabled = false
+        pauseButton.isEnabled = false
 
         //set up the first player
-        binding.firstPlayerTextCounter.setText(R.string.start_the_timer)
-        binding.firstPlayerTextCounter.setTextColor(resources.getColor(R.color.black))
-        binding.firstPlayerButton.setBackgroundColor(resources.getColor(R.color.paused_button_background))
+        firstPlayerTextCounter.setText(R.string.start_the_timer)
+        firstPlayerTextCounter.setTextColor(resources.getColor(R.color.black))
+        firstPlayerButton.setBackgroundColor(resources.getColor(R.color.paused_button_background))
 
         //set up the second player
-        binding.secondPlayerTextCounter.setText(R.string.start_the_timer)
-        binding.secondPlayerTextCounter.setTextColor(resources.getColor(R.color.black))
-        binding.secondPlayerButton.setBackgroundColor(resources.getColor(R.color.paused_button_background))
+        secondPlayerTextCounter.setText(R.string.start_the_timer)
+        secondPlayerTextCounter.setTextColor(resources.getColor(R.color.black))
+        secondPlayerButton.setBackgroundColor(resources.getColor(R.color.paused_button_background))
 
 
-        binding.secondPlayerButton.setOnClickListener {
+        secondPlayerButton.setOnClickListener {
 
-            binding.secondPlayerButton.setEnabled(false)
-            binding.restartButton.setEnabled(true)
-            binding.pauseButton.setEnabled(true)
-            reversTimerTwo(secondCounter, binding.firstPlayerTextCounter)
-            secondPlayerButtonSound!!.start()
+            secondPlayerButton.isEnabled = false
+            restartButton.isEnabled = true
+            pauseButton.isEnabled = true
+
+            reversTimerTwo(secondCounter, firstPlayerTextCounter)
+
+            secondPlayerButtonSound.start()
         }
 
-        binding.firstPlayerButton.setOnClickListener {
+        firstPlayerButton.setOnClickListener {
 
-            binding.firstPlayerButton.setEnabled(false)
-            binding.restartButton.setEnabled(true)
-            binding.pauseButton.setEnabled(true)
-            reversTimerOne(firstCounter, binding.secondPlayerTextCounter)
-            firstPlayerButtonSound!!.start()
+            firstPlayerButton.isEnabled = false
+            restartButton.isEnabled = true
+            pauseButton.isEnabled = true
+
+            reversFirstTimer(firstCounter, secondPlayerTextCounter)
+
+            firstPlayerButtonSound.start()
         }
 
-        binding.pauseButton.setOnClickListener {
+        pauseButton.setOnClickListener {
 
                 v -> updateUIState(v)
 
             //when the [secondPlayerButton] gets Enabled the timer paused
-            if (binding.secondPlayerButton.isEnabled())
-                firstTimer!!.cancel()
+            if (secondPlayerButton.isEnabled)
+                firstTimer.cancel()
 
             //when the [firstPlayerButton] gets Enabled the timer paused
-            else if (binding.firstPlayerButton.isEnabled())
-                secondTimer!!.cancel()
+            else if (firstPlayerButton.isEnabled)
+                secondTimer.cancel()
         }
 
-        binding.restartButton.setOnClickListener {
+        //set up the alert dialog when the user press reset button
+        val resetDialog = AlertDialog.Builder(this)
+            .setTitle(R.string.dialog_title_text)
+            .setPositiveButton(R.string.reset_dialog_text) { _, _ ->
+
+                val intentDialog = Intent(this, MainActivity::class.java)
+                startActivity(intentDialog)
+            }
+
+            .setNegativeButton(R.string.cancel_dialog_text) { dialog, _ ->
+
+                dialog.dismiss()
+
+            }.create()
+
+        restartButton.setOnClickListener {
 
                 v -> updateUIState(v)
 
             //when the [secondPlayerButton] gets Enabled the timer restart
-            if (binding.secondPlayerButton.isEnabled())
-                firstTimer!!.cancel()
+            if (secondPlayerButton.isEnabled)
+                firstTimer.cancel()
 
             //when the [firstPlayerButton] gets Enabled the timer restart
-            else if (binding.firstPlayerButton.isEnabled())
-                secondTimer!!.cancel()
+            else if (firstPlayerButton.isEnabled)
+                secondTimer.cancel()
+
+
+            resetDialog.show()
         }
-
-            //here we stopped editing !!!!!
-            builder = AlertDialog.Builder(this)
-            inflater = LayoutInflater.from(this)
-
-            val view: View = inflater.inflate(R.layout.reset_dialog, null)
-            val noButton = view.findViewById<Button>(R.id.noButton)
-            val yesButton = view.findViewById<Button>(R.id.yesButton)
-
-            builder.setView(view)
-            dialog = builder.create()
-            dialog.show()
-
-            yesButton.setOnClickListener {
-                val intent = Intent(this@OneMinActivity, MainActivity::class.java)
-                startActivity(intent)
-            }
-            noButton.setOnClickListener { dialog.dismiss() }
-        })
 
     }
 
-    private fun reversTimerOne(Seconds: Int, playerTwoTextCounter: TextView) {
-        playerTwoButton.setEnabled(true)
-        timerOne = object : CountDownTimer((Seconds * 1000).toLong(), 1000) {
+    //function to set up and control the first timer
+    private fun reversFirstTimer(Seconds: Int, secondPlayerTextCounter: TextView) {
+
+        secondPlayerButton.isEnabled = true
+
+        firstTimer = object : CountDownTimer((Seconds * 1000).toLong(), 1000) {
+
             override fun onTick(millisUntilFinished: Long) {
-                if (playerOneButton.isEnabled()) {
-                    playerTwoButton.setBackgroundDrawable(resources.getDrawable(R.drawable.paused_button_background))
-                    playerTwoTextCounter.setTextColor(resources.getColor(R.color.paused_background_text_timer))
+
+                if (firstPlayerButton.isEnabled) {
+
+                    secondPlayerButton.setBackgroundColor(resources.getColor(R.color.paused_button_background))
+                    secondPlayerTextCounter.setTextColor(resources.getColor(R.color.black))
                     cancel()
+
                 } else {
+
                     var seconds = (millisUntilFinished / 1000).toInt()
-                    counterOne = seconds
+                    firstCounter = seconds
                     val minutes = seconds / 60
-                    seconds = seconds % 60
-                    playerTwoButton.setBackgroundDrawable(resources.getDrawable(R.drawable.custom_button))
-                    playerTwoTextCounter.setTextColor(Color.WHITE)
-                    playerTwoTextCounter.text =
-                        String.format("%02d", minutes) + ":" + String.format("%02d", seconds)
+                    seconds %= 60
+
+                    val sec = String.format("%02d", seconds)
+                    val min = String.format("%02d", minutes)
+                    val time = "$min:$sec"
+
+                    secondPlayerButton.setBackgroundColor(resources.getColor(R.color.purple_dark))
+                    secondPlayerTextCounter.setTextColor(Color.WHITE)
+                    secondPlayerTextCounter.text = time
                 }
             }
 
             override fun onFinish() {
-                playerTwoButton.setBackgroundDrawable(resources.getDrawable(R.drawable.finish_button_background))
-                playerTwoButton.setText(R.string.stop_the_timer)
-                clockFinished!!.start()
-                playerTwoButton.setEnabled(false)
+                secondPlayerTextCounter.text = getString(R.string.stop_the_timer)
+                clockFinished.start()
+                secondPlayerButton.setBackgroundColor(resources.getColor(R.color.finish_button_background))
+                secondPlayerButton.isEnabled = false
             }
         }
-        timerOne.start()
+        firstTimer.start()
     }
 
     private fun reversTimerTwo(Seconds: Int, playerOneTextCounter: TextView) {
-        playerOneButton.setEnabled(true)
-        timerTwo = object : CountDownTimer((Seconds * 1000).toLong(), 1000) {
+        firstPlayerButton.isEnabled = true
+        secondTimer = object : CountDownTimer((Seconds * 1000).toLong(), 1000) {
+
             override fun onTick(millisUntilFinished: Long) {
-                if (playerTwoButton.isEnabled()) {
-                    playerOneButton.setBackgroundDrawable(resources.getDrawable(R.drawable.paused_button_background))
-                    playerOneTextCounter.setTextColor(resources.getColor(R.color.paused_background_text_timer))
+
+                if (secondPlayerButton.isEnabled) {
+
+                    firstPlayerButton.setBackgroundColor(resources.getColor(R.color.paused_button_background))
+                    playerOneTextCounter.setTextColor(resources.getColor(R.color.black))
                     cancel()
+
                 } else {
+
                     var seconds = (millisUntilFinished / 1000).toInt()
-                    counterTwo = seconds
+                    secondCounter = seconds
                     val minutes = seconds / 60
-                    seconds = seconds % 60
-                    playerOneButton.setBackgroundDrawable(resources.getDrawable(R.drawable.custom_button))
+                    seconds %= 60
+
+                    val sec = String.format("%02d", seconds)
+                    val min = String.format("%02d", minutes)
+                    val time = "$min:$sec"
+
+                    firstPlayerButton.setBackgroundColor(resources.getColor(R.color.purple_dark))
                     playerOneTextCounter.setTextColor(Color.WHITE)
-                    playerOneTextCounter.text =
-                        String.format("%02d", minutes) + ":" + String.format("%02d", seconds)
+                    playerOneTextCounter.text = time
                 }
             }
 
             override fun onFinish() {
-                playerOneButton.setBackgroundDrawable(resources.getDrawable(R.drawable.finish_button_background))
-                playerTwoButton.setText(R.string.stop_the_timer)
-                clockFinished!!.start()
-                playerOneButton.setEnabled(false)
+                firstPlayerTextCounter.text = getString(R.string.stop_the_timer)
+                clockFinished.start()
+                firstPlayerButton.setBackgroundColor(resources.getColor(R.color.finish_button_background))
+                firstPlayerButton.isEnabled = false
             }
         }
-        timerTwo.start()
+        secondTimer.start()
     }
 
     private fun updateUIState(v: View) {
+
         when (v.id) {
-            R.id.pauseButton -> {
-                playerTwoButton.setBackgroundDrawable(resources.getDrawable(R.drawable.paused_button_background))
-                playerTwoTextCounter.setTextColor(resources.getColor(R.color.paused_background_text_timer))
-                playerOneButton.setBackgroundDrawable(resources.getDrawable(R.drawable.paused_button_background))
-                playerOneTextCounter.setTextColor(resources.getColor(R.color.paused_background_text_timer))
+
+            R.id.pause_button -> {
+                secondPlayerButton.setBackgroundColor(resources.getColor(R.color.paused_button_background))
+                secondPlayerTextCounter.setTextColor(resources.getColor(R.color.black))
+
+                firstPlayerButton.setBackgroundColor(resources.getColor(R.color.paused_button_background))
+                firstPlayerTextCounter.setTextColor(resources.getColor(R.color.black))
             }
-            R.id.restartButton -> {
-                playerTwoButton.setBackgroundDrawable(resources.getDrawable(R.drawable.paused_button_background))
-                playerTwoTextCounter.setTextColor(resources.getColor(R.color.paused_background_text_timer))
-                playerOneButton.setBackgroundDrawable(resources.getDrawable(R.drawable.paused_button_background))
-                playerOneTextCounter.setTextColor(resources.getColor(R.color.paused_background_text_timer))
+            R.id.restart_button -> {
+                secondPlayerButton.setBackgroundColor(resources.getColor(R.color.paused_button_background))
+                secondPlayerTextCounter.setTextColor(resources.getColor(R.color.black))
+
+                firstPlayerButton.setBackgroundColor(resources.getColor(R.color.paused_button_background))
+                firstPlayerTextCounter.setTextColor(resources.getColor(R.color.black))
             }
         }
-    }
     }
 }
