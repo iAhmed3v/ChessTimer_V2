@@ -27,5 +27,37 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, OneMinActivity::class.java)
             startActivity(intent)
         }
+
+        binding.fiveMinButton.setOnClickListener {
+
+            val intent = Intent(this, FiveMinActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.tenMinButton.setOnClickListener {
+
+            val intent = Intent(this, TenMinActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.fifteenMinButton.setOnClickListener {
+
+            val intent = Intent(this, FifteenMinActivity::class.java)
+            startActivity(intent)
+        }
+
+
+        binding.twentyMinButton.setOnClickListener {
+
+            val intent = Intent(this, TwentyMinActivity::class.java)
+            startActivity(intent)
+        }
+
+
+        binding.thirtyMinButton.setOnClickListener {
+
+            val intent = Intent(this, ThirtyMinActivity::class.java)
+            startActivity(intent)
+        }
     }
 }

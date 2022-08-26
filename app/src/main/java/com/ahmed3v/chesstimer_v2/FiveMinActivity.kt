@@ -15,10 +15,10 @@ import androidx.core.content.res.ColorStateListInflaterCompat.inflate
 import androidx.core.content.res.ComplexColorCompat.inflate
 import com.ahmed3v.chesstimer_v2.databinding.ActivityMainBinding.inflate
 
-class OneMinActivity : AppCompatActivity() {
+class FiveMinActivity : AppCompatActivity() {
 
-    private var firstCounter: Int = 60
-    private var secondCounter: Int = 60
+    private var firstCounter: Int = 300
+    private var secondCounter: Int = 300
 
     private lateinit var firstTimer: CountDownTimer
     private lateinit var secondTimer: CountDownTimer
@@ -58,12 +58,12 @@ class OneMinActivity : AppCompatActivity() {
         pauseButton.isEnabled = false
 
         //set up the first player
-        firstPlayerTextCounter.setText(R.string.one_min_timer)
+        firstPlayerTextCounter.setText(R.string.five_min_timer)
         firstPlayerTextCounter.setTextColor(resources.getColor(R.color.black))
         firstPlayerButton.setBackgroundColor(resources.getColor(R.color.paused_button_background))
 
         //set up the second player
-        secondPlayerTextCounter.setText(R.string.one_min_timer)
+        secondPlayerTextCounter.setText(R.string.five_min_timer)
         secondPlayerTextCounter.setTextColor(resources.getColor(R.color.black))
         secondPlayerButton.setBackgroundColor(resources.getColor(R.color.paused_button_background))
 

@@ -12,9 +12,12 @@
         android:theme="@style/Theme.ChessTimer_V2"
         tools:targetApi="31">
         <activity
+            android:name=".FiveMinActivity"
+            android:exported="false" />
+        <activity
             android:name=".OneMinActivity"
             android:exported="false"
-            android:theme="@style/Theme.ChessTimer_V2.NoActionBar"/>
+            android:theme="@style/Theme.ChessTimer_V2.NoActionBar" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
