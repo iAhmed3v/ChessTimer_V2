@@ -40,24 +40,24 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-//        binding.fifteenMinButton.setOnClickListener {
-//
-//            val intent = Intent(this, FifteenMinActivity::class.java)
-//            startActivity(intent)
-//        }
-//
-//
-//        binding.twentyMinButton.setOnClickListener {
-//
-//            val intent = Intent(this, TwentyMinActivity::class.java)
-//            startActivity(intent)
-//        }
-//
-//
-//        binding.thirtyMinButton.setOnClickListener {
-//
-//            val intent = Intent(this, ThirtyMinActivity::class.java)
-//            startActivity(intent)
-//        }
+        binding.fifteenMinButton.setOnClickListener {
+
+            val intent = Intent(this, FifteenMinActivity::class.java)
+            startActivity(intent)
+        }
+
+
+        binding.twentyMinButton.setOnClickListener {
+
+            val intent = Intent(this, TwentyMinActivity::class.java)
+            startActivity(intent)
+        }
+
+
+        binding.thirtyMinButton.setOnClickListener {
+
+            val intent = Intent(this, ThirtyMinActivity::class.java)
+            startActivity(intent)
+        }
     }
 }
