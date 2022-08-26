@@ -1,17 +1,19 @@
 package com.ahmed3v.chesstimer_v2
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.coroutines.NonCancellable.cancel
+import androidx.core.content.res.ColorStateListInflaterCompat.inflate
+import androidx.core.content.res.ComplexColorCompat.inflate
+import com.ahmed3v.chesstimer_v2.databinding.ActivityMainBinding.inflate
 
 class OneMinActivity : AppCompatActivity() {
 
@@ -19,7 +21,7 @@ class OneMinActivity : AppCompatActivity() {
     private var secondCounter: Int = 60
 
     private lateinit var firstTimer: CountDownTimer
-    private lateinit var secondTimer:CountDownTimer
+    private lateinit var secondTimer: CountDownTimer
 
     private lateinit var firstPlayerButton: Button
     private lateinit var secondPlayerButton: Button
@@ -90,7 +92,8 @@ class OneMinActivity : AppCompatActivity() {
 
         pauseButton.setOnClickListener {
 
-                v -> updateUIState(v)
+                v ->
+            updateUIState(v)
 
             //when the [secondPlayerButton] gets Enabled the timer paused
             if (secondPlayerButton.isEnabled)
@@ -101,24 +104,31 @@ class OneMinActivity : AppCompatActivity() {
                 secondTimer.cancel()
         }
 
-        //set up the alert dialog when the user press reset button
-        val resetDialog = AlertDialog.Builder(this)
-            .setTitle(R.string.dialog_title_text)
-            .setPositiveButton(R.string.reset_dialog_text) { _, _ ->
+        //set up the alert dialog
+        val builder = AlertDialog.Builder(this)
 
-                val intentDialog = Intent(this, MainActivity::class.java)
-                startActivity(intentDialog)
-            }
+        val inflater = LayoutInflater.from(this)
+        val view: View = inflater.inflate(R.layout.reset_dialog, null)
 
-            .setNegativeButton(R.string.cancel_dialog_text) { dialog, _ ->
+        val resetButton = view.findViewById<Button>(R.id.reset_dialog_button)
+        val cancelButton = view.findViewById<Button>(R.id.cancel_dialog_button)
 
-                dialog.dismiss()
+        builder.setView(view)
+        val dialog = builder.create()
 
-            }.create()
+        resetButton.setOnClickListener {
+
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
+
+        cancelButton.setOnClickListener { dialog.dismiss() }
+
 
         restartButton.setOnClickListener {
 
-                v -> updateUIState(v)
+                v ->
+            updateUIState(v)
 
             //when the [secondPlayerButton] gets Enabled the timer restart
             if (secondPlayerButton.isEnabled)
@@ -129,7 +139,8 @@ class OneMinActivity : AppCompatActivity() {
                 secondTimer.cancel()
 
 
-            resetDialog.show()
+
+            dialog.show()
         }
 
     }
@@ -176,8 +187,11 @@ class OneMinActivity : AppCompatActivity() {
         firstTimer.start()
     }
 
+    //function to set up and control the second timer
     private fun reversTimerTwo(Seconds: Int, playerOneTextCounter: TextView) {
+
         firstPlayerButton.isEnabled = true
+
         secondTimer = object : CountDownTimer((Seconds * 1000).toLong(), 1000) {
 
             override fun onTick(millisUntilFinished: Long) {
@@ -226,6 +240,7 @@ class OneMinActivity : AppCompatActivity() {
                 firstPlayerButton.setBackgroundColor(resources.getColor(R.color.paused_button_background))
                 firstPlayerTextCounter.setTextColor(resources.getColor(R.color.black))
             }
+
             R.id.restart_button -> {
                 secondPlayerButton.setBackgroundColor(resources.getColor(R.color.paused_button_background))
                 secondPlayerTextCounter.setTextColor(resources.getColor(R.color.black))

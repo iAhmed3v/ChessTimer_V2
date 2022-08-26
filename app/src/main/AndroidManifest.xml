@@ -18,7 +18,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.ChessTimer_V2.NoActionBar">
+            android:theme="@style/Theme.ChessTimer_V2">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
