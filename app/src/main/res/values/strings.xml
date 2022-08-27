@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ChessTimer_V2</string>
+    <string name="app_name">Chess Timer</string>
     <string name="action_theme">Dark Theme</string>
 
     <string name="one_min_text">1 min</string>
